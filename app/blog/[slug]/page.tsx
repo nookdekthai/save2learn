@@ -9,7 +9,7 @@ type Props = {
 }
 
 export async function generateStaticParams() {
-    const response = await fetch(`${process.env.SERVER_URI}/api/v1/get-all-blog`).then((res) => res.json())
+    const response = await fetch(`${process.env.SERVER_URI}/api/v1/get-all-blog`).then((res) => res.json()).catch(console.error)
     const blogs = response?.result || []
     return blogs.map((blog) => ({
         slug: blog.slug,
@@ -18,7 +18,7 @@ export async function generateStaticParams() {
 
 
 export async function generateMetadata({ params }) {
-    const response = await fetch(`${process.env.SERVER_URI}/api/v1/get-blog-meta/${params.slug}`).then((res) => res.json())
+    const response = await fetch(`${process.env.SERVER_URI}/api/v1/get-blog-meta/${params.slug}`).then((res) => res.json()).catch(console.error)
     const blog = response.result
     if (!blog) {
       return;
@@ -56,8 +56,8 @@ export const revalidate = 120
 
 const Page = async ({ params }: Props) => {
     const slug = params.slug;
-    const response = await fetch(`${process.env.SERVER_URI}/api/v1/get-blog/${slug}`).then((res) => res.json())
-    const blog = response.result
+    const response = await fetch(`${process.env.SERVER_URI}/api/v1/get-blog/${slug}`).then((res) => res.json()).catch(console.error)
+    const blog = response.result || []
 
     return (
         <>
